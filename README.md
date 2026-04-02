@@ -35,8 +35,7 @@ https://www.youtube.com/embed/3QYq0HOneIg?si=G8r7SHV0NNSFuqB3
 ## Rules
 1. You are encouraged to brainstorm / begin work sooner!
 2. Teams are optional but recommended (2-4 people)
-3. You can have team members from other departments
-  - Do you want original art and music? Ask your artistic friends to join your team!
+3. You can have team members from other departments. Do you want original art and music? Ask your artistic friends to join your team!
 4. 2D games only!
 5. Playable by day 2 (even if it's ugly)
 6. Use of AI is allowed as long as you disclose it
