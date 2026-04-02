@@ -1,4 +1,4 @@
-# Spring 2026 Game Jam
+# Spring 2026 Mini Game Jam
 UTC ACM's first Game Jam for all skill levels!
 
 **Duration:** Mon, Apr 6 - Fri, Apr 10 2026
