@@ -39,8 +39,8 @@ class Projectile:
         
         
 # Assets & Objects
-cake_img = pyg.image.load('./assets/cake.png').convert_alpha()
-fork_img = pyg.image.load('./assets/fork.png').convert_alpha()
+cake_img = pyg.image.load('./assets/smcake.png').convert_alpha()
+fork_img = pyg.image.load('./assets/smfork.png').convert_alpha()
 
 cake = Player(cake_img)
 fork = Projectile(fork_img)
@@ -50,7 +50,7 @@ clock = pyg.time.Clock()
 # Initialize game state
 running = True
 moving = False
-player_velocity = 12 # pixels per frame i think
+player_velocity = 6 # pixels per frame i think
 
 forks = []
 
