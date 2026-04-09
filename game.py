@@ -41,6 +41,7 @@ class Projectile:
 # Assets & Objects
 cake_img = pyg.image.load('./assets/smcake.png').convert_alpha()
 fork_img = pyg.image.load('./assets/smfork.png').convert_alpha()
+tablecloth = pyg.image.load('./assets/tablecloth.png').convert_alpha()
 
 cake = Player(cake_img)
 fork = Projectile(fork_img)
@@ -84,7 +85,7 @@ while running:
     cake.updatepos()
 
     # --- DRAW ---
-    window.fill((0, 0, 0)) #fill window black
+    window.blit(tablecloth) # bg
 
     window.blit(cake.surface, (cake.x, cake.y)) #show cake at position (x, y)
     
