@@ -29,17 +29,30 @@ class Player:
     def turn(self):
         self.surface = pyg.transform.flip(self.surface, True, False)
         self.l_facing = not self.l_facing
-
+        
+class Projectile:
+    def __init__(self, img):
+        self.x = 50
+        self.y = 50
+        self.surface = pyg.transform.scale(img, (img.get_width()*2, img.get_height()*2))
+        self.hitbox = pyg.Rect(self.x, self.y, self.surface.get_width(), self.surface.get_height())
+        
+        
 # Assets & Objects
 cake_img = pyg.image.load('./assets/cake.png').convert_alpha()
+fork_img = pyg.image.load('./assets/fork.png').convert_alpha()
+
 cake = Player(cake_img)
+fork = Projectile(fork_img)
 
 clock = pyg.time.Clock()
 
 # Initialize game state
 running = True
 moving = False
-velocity = 12 # pixels per frame i think
+player_velocity = 12 # pixels per frame i think
+
+forks = []
 
 # Game loop
 while running:
@@ -52,17 +65,17 @@ while running:
 
     keys = pyg.key.get_pressed()
     if keys [pyg.K_LEFT]:
-        cake.x -= velocity
+        cake.x -= player_velocity
         if (not cake.l_facing):
             cake.turn()
     if keys [pyg.K_RIGHT]:
-        cake.x += velocity
+        cake.x += player_velocity
         if(cake.l_facing):
             cake.turn()
     if keys [pyg.K_UP]:
-        cake.y -= velocity
+        cake.y -= player_velocity
     if keys [pyg.K_DOWN]:
-        cake.y += velocity
+        cake.y += player_velocity
         
     # print(cake.x, cake.y) # for debugging
     mpos = pyg.mouse.get_pos()
