@@ -3,6 +3,7 @@ from camera import create_Screen
 from camera import camera
 import projectiles as prj
 import random as rnd
+import time
 
 pyg.init()
 
@@ -53,6 +54,7 @@ cake_img = pyg.image.load('./assets/smcake.png').convert_alpha()
 fork_img = pyg.image.load('./assets/smfork.png').convert_alpha()
 knife_img = pyg.image.load('./assets/knife.png').convert_alpha()
 tablecloth = pyg.image.load('./assets/tablecloth.png').convert_alpha()
+lose_screen = pyg.image.load('./assets/lose screen.png').convert_alpha()
 
 cake = Player(cake_img)
 
@@ -62,6 +64,7 @@ clock = pyg.time.Clock()
 running = True
 player_velocity = 6 # pixels per frame i think
 forks = []
+game_over = False
 
 # Game loop
 while running:
@@ -138,8 +141,16 @@ while running:
     for f in forks:
         window.blit(f.surface, (f.x - camera.x, f.y - camera.y))
         pyg.draw.rect(window, (255, 0, 0), f.hitbox.move(-camera.x,-camera.y), 1) # to see hitbox
-    
+      
     #to see player hitbox
-    cake_hitbox = pyg.draw.rect(window, (255, 255*(collision), 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2
+    cake_hitbox = pyg.draw.rect(window, (255, 255*(collision), 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2    
+    
+    if collision:
+        window.blit(lose_screen, 800, 300)
     
     pyg.display.flip() # update window
+    
+    if collision:
+        pyg.mixer.music.load('./assets/squish.mp3')
+        pyg.mixer.music.play()
+        pyg.mixer.music.unload()
