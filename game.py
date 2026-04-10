@@ -34,8 +34,11 @@ class Player:
     def updatepos(self):
         self.hitbox.x = self.x
         self.hitbox.y = self.y
-        camera.x = self.x - camera.width / 2 
+        camera.x = self.x - camera.width / 2
         camera.y = self.y - camera.height / 2
+        # stop camera leaving background
+        camera.x = max(0, min(camera.x, gameWidth - camera.width))
+        camera.y = max(0, min(camera.y, gameHeight - camera.height))
 
 
     def turn(self):
@@ -43,11 +46,11 @@ class Player:
         self.l_facing = not self.l_facing
         
 walls = [
-pyg.Rect(0,186, gameWidth,wallThickness), #top wall
-pyg.Rect(0,700, gameWidth, wallThickness), #bottom wall
-pyg.Rect(186,0, wallThickness, gameHeight), #left wall
-pyg.Rect(1360,0, wallThickness, gameHeight), #right wall
-    ]
+    pyg.Rect(0, 0, gameWidth, wallThickness),                       # top
+    pyg.Rect(0, gameHeight - wallThickness, gameWidth, wallThickness), # bottom
+    pyg.Rect(0, 0, wallThickness, gameHeight),                      # left
+    pyg.Rect(gameWidth - wallThickness, 0, wallThickness, gameHeight) # right
+]
 
 # Assets & Objects
 cake_img = pyg.image.load('./assets/smcake.png').convert_alpha()
@@ -90,20 +93,22 @@ while running:
         cake.y += player_velocity
 
     for wall in walls:
+
         if cake.hitbox.colliderect(wall):
+            # collision from left
+            if cake.hitbox.right > wall.left and cake.hitbox.left < wall.left:
+                cake.x = cake.x - cake.hitbox.width
 
-            # stop horizontal movement
-            if cake.hitbox.right > wall.left and cake.x < wall.left:
-                cake.x = wall.left
-
-            if cake.hitbox.left < wall.right and cake.x > wall.right:
+            # collision from right
+            if cake.hitbox.left < wall.right and cake.hitbox.right > wall.right:
                 cake.x = wall.right
 
-            # stop vertical movement
-            if cake.hitbox.bottom > wall.top and cake.y < wall.top:
-                cake.y = wall.top
+            # collision from top
+            if cake.hitbox.bottom > wall.top and cake.hitbox.top < wall.top:
+                cake.y = wall.top - cake.hitbox.height
 
-            if cake.hitbox.top < wall.bottom and cake.y > wall.bottom:
+            # collision from bottom
+            if cake.hitbox.top < wall.bottom and cake.hitbox.bottom > wall.bottom:
                 cake.y = wall.bottom
 
     print("cake",cake.x, cake.y) # for debugging
@@ -133,6 +138,7 @@ while running:
     collision = prj.collisioncheck(forks, cake)
 
     # --- DRAW ---
+    window.fill((0,0,0))
     window.blit(tablecloth, (-camera.x, -camera.y)) # bg
 
     window.blit(cake.surface, (cake.x - camera.x, cake.y - camera.y)) #show cake at position (x, y)
