@@ -127,7 +127,7 @@ while running:
         forks.append(prj.Projectile(knife_img, 75, rnd.randint(150,1450), 5, 1, 0))
         forks.append(prj.Projectile(knife_img, 1525, rnd.randint(150,1450), 5, -1, 0))
     prj.moveprojectiles(forks)
-    prj.collisioncheck(forks, cake)
+    collision = prj.collisioncheck(forks, cake)
 
     # --- DRAW ---
     window.blit(tablecloth, (-camera.x, -camera.y)) # bg
@@ -137,8 +137,9 @@ while running:
     # draw projectiles
     for f in forks:
         window.blit(f.surface, (f.x - camera.x, f.y - camera.y))
+        pyg.draw.rect(window, (255, 0, 0), f.hitbox.move(-camera.x,-camera.y), 1) # to see hitbox
     
-    #to see hitbox
-    cake_hitbox = pyg.draw.rect(window, (255, 0, 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2
-
+    #to see player hitbox
+    cake_hitbox = pyg.draw.rect(window, (255, 255*(collision), 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2
+    
     pyg.display.flip() # update window

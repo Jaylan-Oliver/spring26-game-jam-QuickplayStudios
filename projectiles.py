@@ -1,4 +1,5 @@
 import pygame as pyg
+from camera import camera
 
 class Projectile:
     def __init__(self, img, x, y, velocity, xdir, ydir):
@@ -31,6 +32,10 @@ class Projectile:
         self.surface = pyg.transform.rotate(self.surface, self.angle) # face correct direction
         self.hitbox = pyg.Rect(self.x, self.y, self.surface.get_width(), self.surface.get_height())
 
+    def updatehb(self):
+        self.hitbox.x = self.x
+        self.hitbox.y = self.y
+        
 ''' 
 move projectiles based on direction facing
 projectiles = array of projectile objects
@@ -44,6 +49,7 @@ def moveprojectiles(projectiles):
             # if moving vertically
             if p.ydir != 0:
              p.y += p.velocity * p.ydir
+            p.updatehb()
              
         else: # despawn
             projectiles.pop(projectiles.index(p))
@@ -61,11 +67,8 @@ def burst(img, x, y, velocity): # all directions
     return bullets
 
 # projectile collisions ?
-# def collisioncheck(projectiles, player):
-#     collision = False
-#     for p in projectiles:
-#         p.hitbox.topleft = (p.x, p.y)
-#         if p.hitbox.colliderect(player.rect):
-#             print("Collision")
-#             collision = True
-#     return collision
+def collisioncheck(projectiles, player):
+    for p in projectiles:
+        if p.hitbox.colliderect(player.hitbox):
+            return True
+    return False
