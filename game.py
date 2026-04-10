@@ -55,6 +55,7 @@ fork_img = pyg.image.load('./assets/smfork.png').convert_alpha()
 knife_img = pyg.image.load('./assets/knife.png').convert_alpha()
 tablecloth = pyg.image.load('./assets/tablecloth.png').convert_alpha()
 lose_screen = pyg.image.load('./assets/lose screen.png').convert_alpha()
+void = pyg.image.load('./assets/void.png').convert_alpha()
 
 cake = Player(cake_img)
 
@@ -70,87 +71,96 @@ game_over = False
 while running:
     dt = clock.tick(60) / 1000 # calculate dt dynamically
 
-    # --- INPUT ---
+    # Window x button
     for event in pyg.event.get():
-        if event.type == pyg.QUIT:
-            running = False
+            if event.type == pyg.QUIT:
+                running = False
 
-    keys = pyg.key.get_pressed()
-    if keys [pyg.K_LEFT]:
-        cake.x -= player_velocity
-        if (not cake.l_facing):
-            cake.turn()
-    if keys [pyg.K_RIGHT]:
-        cake.x += player_velocity
-        if(cake.l_facing):
-            cake.turn()
-    if keys [pyg.K_UP]:
-        cake.y -= player_velocity
-    if keys [pyg.K_DOWN]:
-        cake.y += player_velocity
+    if not game_over:
+        
+        # --- INPUT ---
 
-    for wall in walls:
-        if cake.hitbox.colliderect(wall):
+        keys = pyg.key.get_pressed()
+        if keys [pyg.K_LEFT]:
+            cake.x -= player_velocity
+            if (not cake.l_facing):
+                cake.turn()
+        if keys [pyg.K_RIGHT]:
+            cake.x += player_velocity
+            if(cake.l_facing):
+                cake.turn()
+        if keys [pyg.K_UP]:
+            cake.y -= player_velocity
+        if keys [pyg.K_DOWN]:
+            cake.y += player_velocity
 
-            # stop horizontal movement
-            if cake.hitbox.right > wall.left and cake.x < wall.left:
-                cake.x = wall.left
+        for wall in walls:
+            if cake.hitbox.colliderect(wall):
 
-            if cake.hitbox.left < wall.right and cake.x > wall.right:
-                cake.x = wall.right
+                # stop horizontal movement
+                if cake.hitbox.right > wall.left and cake.x < wall.left:
+                    cake.x = wall.left
 
-            # stop vertical movement
-            if cake.hitbox.bottom > wall.top and cake.y < wall.top:
-                cake.y = wall.top
+                if cake.hitbox.left < wall.right and cake.x > wall.right:
+                    cake.x = wall.right
 
-            if cake.hitbox.top < wall.bottom and cake.y > wall.bottom:
-                cake.y = wall.bottom
+                # stop vertical movement
+                if cake.hitbox.bottom > wall.top and cake.y < wall.top:
+                    cake.y = wall.top
 
-    print("cake",cake.x, cake.y) # for debugging
-    pyg.time.delay(10)
-    #print("cake hitbox",cake.hitbox.x,cake.hitbox.y)
-    mpos = pyg.mouse.get_pos()
+                if cake.hitbox.top < wall.bottom and cake.y > wall.bottom:
+                    cake.y = wall.bottom
 
-    # --- UPDATE ---
-    cake.updatepos()
-    
-    # spawn projectiles
-    # spawn bursts along outside edges of map
-    if rnd.random() < 0.01:
-        #top and bottom
-        forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(0,150), 1)
-        forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(750,900), 1)
-    if rnd.random() < 0.005:
-        #left and right
-        forks += prj.burst(fork_img, 75, rnd.randint(0,1600), 1)
-        forks += prj.burst(fork_img, 1525, rnd.randint(0,1600), 1)
-    #spawn knife
-    if rnd.random() < 0.005:
-        #left and right
-        forks.append(prj.Projectile(knife_img, 75, rnd.randint(150,1450), 5, 1, 0))
-        forks.append(prj.Projectile(knife_img, 1525, rnd.randint(150,1450), 5, -1, 0))
-    prj.moveprojectiles(forks)
-    collision = prj.collisioncheck(forks, cake)
+        print("cake",cake.x, cake.y) # for debugging
+        pyg.time.delay(10)
+        #print("cake hitbox",cake.hitbox.x,cake.hitbox.y)
+        mpos = pyg.mouse.get_pos()
+
+        # --- UPDATE ---
+        cake.updatepos()
+        
+        # spawn projectiles
+        # spawn bursts along outside edges of map
+        if rnd.random() < 0.01:
+            #top and bottom
+            forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(0,150), 1)
+            forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(750,900), 1)
+        if rnd.random() < 0.005:
+            #left and right
+            forks += prj.burst(fork_img, 75, rnd.randint(0,1600), 1)
+            forks += prj.burst(fork_img, 1525, rnd.randint(0,1600), 1)
+        #spawn knife
+        if rnd.random() < 0.005:
+            #left and right
+            forks.append(prj.Projectile(knife_img, 75, rnd.randint(150,1450), 5, 1, 0))
+            forks.append(prj.Projectile(knife_img, 1525, rnd.randint(150,1450), 5, -1, 0))
+        
+        prj.moveprojectiles(forks)
+        if prj.collisioncheck(forks, cake):
+            game_over = True
+            pyg.mixer.music.load('./assets/squish.mp3')
+            pyg.mixer.music.play()
 
     # --- DRAW ---
-    window.blit(tablecloth, (-camera.x, -camera.y)) # bg
+    if not game_over:
+        window.blit(tablecloth, (-camera.x, -camera.y)) # bg
 
-    window.blit(cake.surface, (cake.x - camera.x, cake.y - camera.y)) #show cake at position (x, y)
-    
-    # draw projectiles
-    for f in forks:
-        window.blit(f.surface, (f.x - camera.x, f.y - camera.y))
-        pyg.draw.rect(window, (255, 0, 0), f.hitbox.move(-camera.x,-camera.y), 1) # to see hitbox
-      
-    #to see player hitbox
-    cake_hitbox = pyg.draw.rect(window, (255, 255*(collision), 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2    
-    
-    if collision:
-        window.blit(lose_screen, 800, 300)
+        window.blit(cake.surface, (cake.x - camera.x, cake.y - camera.y)) #show cake at position (x, y)
+        
+        # draw projectiles
+        for f in forks:
+            window.blit(f.surface, (f.x - camera.x, f.y - camera.y))
+            #pyg.draw.rect(window, (255, 0, 0), f.hitbox.move(-camera.x,-camera.y), 1) # to see hitbox
+        
+        #to see player hitbox
+        #cake_hitbox = pyg.draw.rect(window, (255, 255*(collision), 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2    
+        
+        # world border
+        window.blit(void, (-camera.x, -camera.y))
+        
+    else:
+        window.blit(lose_screen,(0,0))
     
     pyg.display.flip() # update window
     
-    if collision:
-        pyg.mixer.music.load('./assets/squish.mp3')
-        pyg.mixer.music.play()
-        pyg.mixer.music.unload()
+    
