@@ -37,7 +37,7 @@ projectiles = array of projectile objects
 '''
 def moveprojectiles(projectiles):
     for p in projectiles:
-        if p.x in range(-40, 650) and p.y in range(-40,650): # if projectile in screen boundaries, plus extra for boundaries
+        if p.x in range(-50,1600) and p.y in range(-50,1600): # if projectile in screen boundaries, plus extra for boundaries
             # if moving horizontally
             if p.xdir != 0:
                 p.x += p.velocity * p.xdir
@@ -48,3 +48,21 @@ def moveprojectiles(projectiles):
         else: # despawn
             projectiles.pop(projectiles.index(p))
             
+# Generate bullet patterns
+def burst(img, x, y, velocity): # all directions
+    bullets = []
+    dirs = [-1,0,1]
+    
+    for xd in dirs:
+        for yd in dirs:
+            if not(xd == 0 and yd == 0): # avoid stationary bullet
+                bullets.append(Projectile(img, x, y, velocity, xd, yd))
+            
+    return bullets
+
+def vertwall():
+    bullets = []
+    
+    #bullets.append(Projectile(img, x, y, velocity, xd, yd))
+            
+    return bullets

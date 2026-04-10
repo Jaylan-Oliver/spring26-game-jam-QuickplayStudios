@@ -42,6 +42,7 @@ class Player:
 # Assets & Objects
 cake_img = pyg.image.load('./assets/smcake.png').convert_alpha()
 fork_img = pyg.image.load('./assets/smfork.png').convert_alpha()
+knife_img = pyg.image.load('./assets/knife.png').convert_alpha()
 tablecloth = pyg.image.load('./assets/tablecloth.png').convert_alpha()
 
 cake = Player(cake_img)
@@ -84,9 +85,11 @@ while running:
     # --- UPDATE ---
     cake.updatepos()
     
-    # create forks 20% of frames in random direction
-    if rnd.random() < 0.2:
-        forks.append(prj.Projectile(fork_img, 100, 100, 1, rnd.randint(-1,1), rnd.randint(-1,1)))
+    # spawn projectiles
+    # spawn bursts along top 10% of frames
+    if rnd.random() < 0.1:
+        forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(0,150), 1)
+    
     prj.moveprojectiles(forks)
 
     # --- DRAW ---
