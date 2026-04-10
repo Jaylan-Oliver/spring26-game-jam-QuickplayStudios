@@ -96,7 +96,7 @@ while running:
     
     # draw projectiles
     for f in forks:
-        window.blit(f.surface, (f.x, f.y))
+        window.blit(f.surface, (f.x - camera.x, f.y - camera.y))
     
     #to see hitbox
     cake_hitbox = pyg.draw.rect(window, (255, 0, 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2
