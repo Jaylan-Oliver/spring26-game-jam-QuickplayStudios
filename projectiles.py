@@ -29,7 +29,7 @@ class Projectile:
         
         self.surface = pyg.transform.scale(img, (img.get_width()*2, img.get_height()*2))   
         self.surface = pyg.transform.rotate(self.surface, self.angle) # face correct direction
-        self.hitbox = pyg.mask.from_surface(self.surface)
+        self.hitbox = pyg.Rect(self.x, self.y, self.surface.get_width(), self.surface.get_height())
 
 ''' 
 move projectiles based on direction facing
@@ -60,9 +60,12 @@ def burst(img, x, y, velocity): # all directions
             
     return bullets
 
-def vertwall():
-    bullets = []
-    
-    #bullets.append(Projectile(img, x, y, velocity, xd, yd))
-            
-    return bullets
+# projectile collisions ?
+# def collisioncheck(projectiles, player):
+#     collision = False
+#     for p in projectiles:
+#         p.hitbox.topleft = (p.x, p.y)
+#         if p.hitbox.colliderect(player.rect):
+#             print("Collision")
+#             collision = True
+#     return collision

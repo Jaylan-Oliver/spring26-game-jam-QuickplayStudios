@@ -86,11 +86,23 @@ while running:
     cake.updatepos()
     
     # spawn projectiles
-    # spawn bursts along top 10% of frames
-    if rnd.random() < 0.1:
+    # spawn bursts along outside edges of map
+    if rnd.random() < 0.01:
+        #top and bottom
         forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(0,150), 1)
+        forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(750,900), 1)
+    if rnd.random() < 0.005:
+        #left and right
+        forks += prj.burst(fork_img, 75, rnd.randint(0,1600), 1)
+        forks += prj.burst(fork_img, 1525, rnd.randint(0,1600), 1)
+    #spawn knife
+    if rnd.random() < 0.005:
+        #left and right
+        forks.append(prj.Projectile(knife_img, 75, rnd.randint(150,1450), 5, 1, 0))
+        forks.append(prj.Projectile(knife_img, 1525, rnd.randint(150,1450), 5, -1, 0))
     
     prj.moveprojectiles(forks)
+    prj.collisioncheck(forks, cake)
 
     # --- DRAW ---
     window.blit(tablecloth, (-camera.x, -camera.y)) # bg
