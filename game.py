@@ -1,4 +1,7 @@
 import pygame as pyg
+from camera import create_Screen
+from camera import camera
+
 pyg.init()
 
 # --- Notes ---
@@ -6,7 +9,9 @@ pyg.init()
 # -------------
 
 # Window
-window = pyg.display.set_mode((640, 640))
+window = create_Screen(640,640, "Cake Game")
+
+
 
 # Class for player character
 class Player:
@@ -25,6 +30,9 @@ class Player:
     def updatepos(self):
         self.hitbox.x = self.x
         self.hitbox.y = self.y
+        camera.x = self.x - camera.width/2
+        camera.y = self.y - camera.height/2
+
     
     def turn(self):
         self.surface = pyg.transform.flip(self.surface, True, False)
@@ -78,16 +86,19 @@ while running:
     if keys [pyg.K_DOWN]:
         cake.y += player_velocity
         
-    # print(cake.x, cake.y) # for debugging
+    print("cake",cake.x, cake.y) # for debugging
+    pyg.time.delay(100)
+    print("cake hitbox",cake.hitbox.x,cake.hitbox.y)
     mpos = pyg.mouse.get_pos()
 
     # --- UPDATE ---
     cake.updatepos()
+    
 
     # --- DRAW ---
     window.blit(tablecloth) # bg
 
-    window.blit(cake.surface, (cake.x, cake.y)) #show cake at position (x, y)
+    window.blit(cake.surface, (cake.x - camera.x, cake.y - camera.y)) #show cake at position (x, y)
     
     #to see hitbox
     pyg.draw.rect(window, (255, 0, 0), cake.hitbox, 1) # draw with border 2
