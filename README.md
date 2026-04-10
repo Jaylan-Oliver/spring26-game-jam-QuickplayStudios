@@ -1,3 +1,3 @@
-# Quickplay Studios
+# Quickplay Studios - Cake Game
 
 - bullet hell

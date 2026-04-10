@@ -1,6 +1,7 @@
 import pygame as pyg
 from camera import create_Screen
 from camera import camera
+from projectiles import *
 
 pyg.init()
 
@@ -33,19 +34,12 @@ class Player:
         camera.x = self.x - camera.width/2
         camera.y = self.y - camera.height/2
 
-    
+
     def turn(self):
         self.surface = pyg.transform.flip(self.surface, True, False)
         self.l_facing = not self.l_facing
         
-class Projectile:
-    def __init__(self, img):
-        self.x = 50
-        self.y = 50
-        self.surface = pyg.transform.scale(img, (img.get_width()*2, img.get_height()*2))
-        self.hitbox = pyg.Rect(self.x, self.y, self.surface.get_width(), self.surface.get_height())
-        
-        
+
 # Assets & Objects
 cake_img = pyg.image.load('./assets/smcake.png').convert_alpha()
 fork_img = pyg.image.load('./assets/smfork.png').convert_alpha()
@@ -58,9 +52,7 @@ clock = pyg.time.Clock()
 
 # Initialize game state
 running = True
-moving = False
 player_velocity = 6 # pixels per frame i think
-
 forks = []
 
 # Game loop
