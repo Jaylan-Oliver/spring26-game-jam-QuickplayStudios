@@ -11,7 +11,10 @@ pyg.init()
 # -------------
 
 # Window
-window = create_Screen(1600,900, "Cake Game")
+gameWidth = 1600
+gameHeight = 900
+wallThickness = 150
+window = create_Screen(gameWidth,gameHeight, "Cake Game")
 
 # Class for player character
 class Player:
@@ -38,6 +41,12 @@ class Player:
         self.surface = pyg.transform.flip(self.surface, True, False)
         self.l_facing = not self.l_facing
         
+walls = [
+pyg.Rect(0,0, gameWidth, gameHeight), #top wall
+pyg.Rect(0,gameHeight-wallThickness, gameWidth, wallThickness), #bottom wall
+pyg.Rect(0,0, wallThickness, gameHeight), #left wall
+pyg.Rect(gameWidth-wallThickness,0, wallThickness, gameHeight), #right wall
+    ]
 
 # Assets & Objects
 cake_img = pyg.image.load('./assets/smcake.png').convert_alpha()
@@ -76,7 +85,24 @@ while running:
         cake.y -= player_velocity
     if keys [pyg.K_DOWN]:
         cake.y += player_velocity
-        
+
+    for wall in walls:
+        if cake.hitbox.colliderect(wall):
+
+            # stop horizontal movement
+            if cake.hitbox.right > wall.left and cake.x < wall.left:
+                cake.x = wall.left - cake.surface.get_width()
+
+            if cake.hitbox.left < wall.right and cake.x > wall.right:
+                cake.x = wall.right
+
+            # stop vertical movement
+            if cake.hitbox.bottom > wall.top and cake.y < wall.top:
+                cake.y = wall.top - cake.surface.get_height()
+
+            if cake.hitbox.top < wall.bottom and cake.y > wall.bottom:
+                cake.y = wall.bottom
+
     #print("cake",cake.x, cake.y) # for debugging
     #pyg.time.delay(100)
     #print("cake hitbox",cake.hitbox.x,cake.hitbox.y)
@@ -89,7 +115,6 @@ while running:
     # spawn bursts along top 10% of frames
     if rnd.random() < 0.1:
         forks += prj.burst(fork_img, rnd.randint(0,1600), rnd.randint(0,150), 1)
-    
     prj.moveprojectiles(forks)
 
     # --- DRAW ---
