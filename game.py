@@ -43,10 +43,10 @@ class Player:
         self.l_facing = not self.l_facing
         
 walls = [
-pyg.Rect(0,0, gameWidth, gameHeight), #top wall
-pyg.Rect(0,gameHeight-wallThickness, gameWidth, wallThickness), #bottom wall
-pyg.Rect(0,0, wallThickness, gameHeight), #left wall
-pyg.Rect(gameWidth-wallThickness,0, wallThickness, gameHeight), #right wall
+pyg.Rect(0,186, gameWidth,wallThickness), #top wall
+pyg.Rect(0,700, gameWidth, wallThickness), #bottom wall
+pyg.Rect(186,0, wallThickness, gameHeight), #left wall
+pyg.Rect(1360,0, wallThickness, gameHeight), #right wall
     ]
 
 # Assets & Objects
@@ -94,20 +94,20 @@ while running:
 
             # stop horizontal movement
             if cake.hitbox.right > wall.left and cake.x < wall.left:
-                cake.x = wall.left - cake.surface.get_width()
+                cake.x = wall.left
 
             if cake.hitbox.left < wall.right and cake.x > wall.right:
                 cake.x = wall.right
 
             # stop vertical movement
             if cake.hitbox.bottom > wall.top and cake.y < wall.top:
-                cake.y = wall.top - cake.surface.get_height()
+                cake.y = wall.top
 
             if cake.hitbox.top < wall.bottom and cake.y > wall.bottom:
                 cake.y = wall.bottom
 
-    #print("cake",cake.x, cake.y) # for debugging
-    #pyg.time.delay(100)
+    print("cake",cake.x, cake.y) # for debugging
+    pyg.time.delay(10)
     #print("cake hitbox",cake.hitbox.x,cake.hitbox.y)
     mpos = pyg.mouse.get_pos()
 
