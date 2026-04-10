@@ -11,13 +11,13 @@ pyg.init()
 # -------------
 
 # Window
-window = create_Screen(640,640, "Cake Game")
+window = create_Screen(1600,900, "Cake Game")
 
 # Class for player character
 class Player:
     def __init__(self, img):
-        self.x = 60
-        self.y = 60
+        self.x = camera.width // 2
+        self.y = camera.height // 2
         self.surface = pyg.transform.scale(img, (img.get_width()*2, img.get_height()*2)) # sprite surface itself
         self.hitbox = pyg.Rect(self.x, self.y, self.surface.get_width(), self.surface.get_height()) # moves based on position
         self.l_facing = True
@@ -30,7 +30,7 @@ class Player:
     def updatepos(self):
         self.hitbox.x = self.x
         self.hitbox.y = self.y
-        camera.x = self.x - camera.width / 2
+        camera.x = self.x - camera.width / 2 
         camera.y = self.y - camera.height / 2
 
 
@@ -90,7 +90,7 @@ while running:
     prj.moveprojectiles(forks)
 
     # --- DRAW ---
-    window.blit(tablecloth) # bg
+    window.blit(tablecloth, (-camera.x, -camera.y)) # bg
 
     window.blit(cake.surface, (cake.x - camera.x, cake.y - camera.y)) #show cake at position (x, y)
     
