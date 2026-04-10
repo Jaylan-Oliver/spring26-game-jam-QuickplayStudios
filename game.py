@@ -1,7 +1,8 @@
 import pygame as pyg
 from camera import create_Screen
 from camera import camera
-from projectiles import *
+import projectiles as prj
+import random as rnd
 
 pyg.init()
 
@@ -11,8 +12,6 @@ pyg.init()
 
 # Window
 window = create_Screen(640,640, "Cake Game")
-
-
 
 # Class for player character
 class Player:
@@ -46,7 +45,6 @@ fork_img = pyg.image.load('./assets/smfork.png').convert_alpha()
 tablecloth = pyg.image.load('./assets/tablecloth.png').convert_alpha()
 
 cake = Player(cake_img)
-fork = Projectile(fork_img)
 
 clock = pyg.time.Clock()
 
@@ -86,14 +84,21 @@ while running:
     # --- UPDATE ---
     cake.updatepos()
     
+    # create forks 20% of frames in random direction
+    if rnd.random() < 0.2:
+        forks.append(prj.Projectile(fork_img, 100, 100, 1, rnd.randint(-1,1), rnd.randint(-1,1)))
+    prj.moveprojectiles(forks)
 
     # --- DRAW ---
     window.blit(tablecloth) # bg
 
     window.blit(cake.surface, (cake.x - camera.x, cake.y - camera.y)) #show cake at position (x, y)
     
-    #to see hitbox
+    # draw projectiles
+    for f in forks:
+        window.blit(f.surface, (f.x, f.y))
     
+    #to see hitbox
     cake_hitbox = pyg.draw.rect(window, (255, 0, 0), cake.hitbox.move(-camera.x,-camera.y), 1) # draw with border 2
 
     pyg.display.flip() # update window

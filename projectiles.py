@@ -1,42 +1,43 @@
 import pygame as pyg
-import game
 
 class Projectile:
-    def __init__(self, img, velocity, xdir, ydir):
-        self.x = 50
-        self.y = 50
+    def __init__(self, img, x, y, velocity, xdir, ydir):
+        self.x = x
+        self.y = y
         self.velocity = velocity
         
         # direction: +1 = forward (positive dir), 0 = no movement along this axis, -1 = backward (negative dir)
         self.xdir = xdir 
         self.ydir = ydir
         self.angle = 0
-        if xdir == -1:
-            angle = 0
-        elif xdir == -1 and ydir == -1:
-            angle = 45
-        elif ydir == -1:
-            angle = 90
-        elif xdir == 1 and ydir == -1:
-            angle = 135
-        elif xdir == 1:
-            angle = 180
-        elif xdir == 1 and ydir == 1:
-            angle = 225
-        elif ydir == 1:
-            angle = 270
+        if xdir == -1 and ydir == 0: # move left
+            self.angle = 0
+        elif xdir == -1 and ydir == -1: # move down left
+            self.angle = 315
+        elif xdir == 0 and ydir == -1: # move down
+            self.angle = 270
+        elif xdir == 1 and ydir == -1: # move down right
+            self.angle = 225
+        elif xdir == 1 and ydir == 0: # move right
+            self.angle = 180
+        elif xdir == 1 and ydir == 1: # move up right
+            self.angle = 135
+        elif xdir == 0 and ydir == 1: # move up
+            self.angle = 90
+        elif xdir == -1 and ydir == 1: # move up left
+            self.angle = 45
         
         self.surface = pyg.transform.scale(img, (img.get_width()*2, img.get_height()*2))   
-        self.surface = pyg.transform.rotate(self.surface, angle) # face correct direction
+        self.surface = pyg.transform.rotate(self.surface, self.angle) # face correct direction
         self.hitbox = pyg.mask.from_surface(self.surface)
 
 ''' 
-move projectiles horizontally
+move projectiles based on direction facing
 projectiles = array of projectile objects
 '''
 def moveprojectiles(projectiles):
     for p in projectiles:
-        if p.x in range(0, 650) and p.y in range(0,650): # if projectile in screen boundaries, plus extra for boundaries
+        if p.x in range(-40, 650) and p.y in range(-40,650): # if projectile in screen boundaries, plus extra for boundaries
             # if moving horizontally
             if p.xdir != 0:
                 p.x += p.velocity * p.xdir
